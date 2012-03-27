@@ -1,0 +1,6 @@
+[program:redis]
+command=/usr/bin/redis-server /etc/redis/redis.conf
+stdout_logfile=/var/log/redis.log
+redirect_stderr=true
+priority=1
+

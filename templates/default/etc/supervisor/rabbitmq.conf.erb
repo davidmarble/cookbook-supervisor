@@ -1,0 +1,10 @@
+[program:rabbitmq]
+command=env - HOME="/root" /usr/lib/rabbitmq/bin/rabbitmq-server
+directory=/var/lib/rabbitmq
+user=root
+autostart=true
+autorestart=true
+priority=10
+redirect_stderr=true
+stdout_logfile=/var/log/rabbitmq/rabbitmq-server.log
+environment=HOME=/root

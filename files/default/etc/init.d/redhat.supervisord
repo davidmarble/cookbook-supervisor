@@ -1,0 +1,81 @@
+#!/bin/bash
+#
+# supervisord   This scripts turns supervisord on
+#
+# Author:       Mike McGrath <mmcgrath@redhat.com> (based off yumupdatesd)
+#
+# chkconfig:	- 95 04
+#
+# description:  supervisor is a process control utility.  It has a web based
+#               xmlrpc interface as well as a few other nifty features.
+# processname:  supervisord
+# config: /etc/supervisord.conf
+# pidfile: /var/run/supervisord.pid
+#
+
+PATH=/sbin:/usr/sbin:/usr/local/bin:/bin:/usr/bin
+NAME=supervisord
+DAEMON=/usr/local/bin/$NAME
+PIDFILE=/var/run/$NAME.pid
+DAEMON_ARGS="--pidfile ${PIDFILE}"
+SCRIPTNAME=/etc/init.d/$NAME
+
+# source function library
+. /etc/rc.d/init.d/functions
+
+RETVAL=0
+
+start() {
+	echo -n $"Starting supervisord: "
+	daemon $DAEMON $DAEMON_ARGS
+	RETVAL=$?
+	echo
+	[ $RETVAL -eq 0 ] && touch /var/lock/subsys/supervisord
+}
+
+stop() {
+	echo -n $"Stopping supervisord: "
+	killproc $NAME
+	echo
+	RETVAL="$?"
+	[ "$RETVAL" = 2 ] && return 2
+	# Wait for children to finish too if this is a daemon that forks
+	# and if the daemon is only ever run from this initscript.
+	# If the above conditions are not satisfied then add some other code
+	# that waits for the process to drop all resources that could be
+	# needed by services started subsequently.  A last resort is to
+	# sleep for some time.
+	[ $RETVAL -eq 0 ] && rm -f /var/lock/subsys/supervisord
+	rm -f $PIDFILE
+	return "$RETVAL"
+}
+
+restart() {
+	stop
+	start
+}
+
+case "$1" in
+  start)
+	start
+	;;
+  stop) 
+	stop
+	;;
+  restart|force-reload|reload)
+	restart
+	;;
+  condrestart)
+	[ -f /var/lock/subsys/supervisord ] && restart
+	;;
+  status)
+	status $NAME
+	RETVAL=$?
+	;;
+  *)
+	echo $"Usage: $SCRIPTNAME {start|stop|status|restart|reload|force-reload|condrestart}"
+	exit 3
+	;;
+esac
+
+:

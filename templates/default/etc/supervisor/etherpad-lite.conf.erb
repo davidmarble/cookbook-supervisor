@@ -1,0 +1,9 @@
+[program:etherpad-lite]
+command=/usr/bin/node ./server.js
+directory=/var/www/etherpad-lite/node
+user=www-data
+autostart=true
+autorestart=true
+stdout_logfile=/var/log/etherpad-lite.log
+redirect_stderr=true
+priority=1000
