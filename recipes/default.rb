@@ -42,7 +42,6 @@ end
 
 node[:supervisor][:includes].each do |inc|
     template "/etc/supervisor/#{inc}.conf" do
-        source node[:supervisor].attribute?("config_cookbook") ? "supervisor/#{inc}.conf.erb" : "etc/supervisor/#{inc}.conf.erb"
         source "etc/supervisor/#{inc}.conf.erb"
         owner "root"
         group "root"
