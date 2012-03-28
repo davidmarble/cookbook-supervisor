@@ -42,10 +42,12 @@ end
 
 node[:supervisor][:includes].each do |inc|
     template "/etc/supervisor/#{inc}.conf" do
+        source node[:supervisor].attribute?("config_cookbook") ? "supervisor/#{inc}.conf.erb" : "etc/supervisor/#{inc}.conf.erb"
         source "etc/supervisor/#{inc}.conf.erb"
         owner "root"
         group "root"
         mode "0644"
+        cookbook node[:supervisor].attribute?("config_cookbook") ? node[:supervisor][:config_cookbook] : "supervisor"
         notifies :restart, resources(:service => "supervisord")
     end
 end

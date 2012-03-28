@@ -28,6 +28,15 @@ you want to include and manage with supervisor:
         "includes": ["etherpad-lite", "redis"]
     }
 
+If you want to use template configuration files defined in a separate 
+cookbook, use the `config_cookbook` option:
+
+    "supervisor": {
+        "config_cookbook": "custom-cookbook",
+        "includes": ["redis"]
+    }
+
+This expects `cookbooks/custom-cookbook/templates/<default>/supervisor/redis.conf.erb`.
 
 # License and Author
 
